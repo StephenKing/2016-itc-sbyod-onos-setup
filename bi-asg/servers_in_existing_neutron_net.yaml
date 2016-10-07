@@ -1,0 +1,104 @@
+heat_template_version: 2013-05-23
+
+description: >
+  Creates a nginx server with consul and assigns a floating IP.
+
+parameters:
+  consul_ip:
+    type: string
+    description: IP address of the consul server
+    # constraints:
+    #   - custom_constraint: ip_addr
+    #     description: Must be an IP address
+  key_name:
+    type: string
+    description: Name of an existing key pair to use for the instances
+    default: st
+    constraints:
+      - custom_constraint: nova.keypair
+        description: Must name a public key (pair) known to Nova
+  flavor:
+    type: string
+    description: Flavor for the instances to be created
+    default: m1.small
+    constraints:
+      - custom_constraint: nova.flavor
+        description: Must be a flavor known to Nova
+  image:
+    type: string
+    default: nginx-template-snapshot
+    description: >
+      Name or ID of the image to use for the instances.
+      You can get the default from
+      http://cloud.fedoraproject.org/fedora-20.x86_64.qcow2
+      There is also
+      http://cloud.fedoraproject.org/fedora-20.i386.qcow2
+      Any image should work since this template
+      does not ask the VMs to do anything.
+    constraints:
+      - custom_constraint: glance.image
+        description: Must identify an image known to Glance
+  network:
+    type: string
+    description: The network for the VM
+    default: ad627f19-d213-4dae-9e46-7fc325bed4a6
+    constraints:
+      - {custom_constraint: neutron.network}
+  public_net:
+    type: string
+    default: 30414f60-ea3b-4e7e-8507-6bf975c68f7a
+    description: >
+      ID of public network for which floating IP addresses will be allocated
+    constraints:
+      - {custom_constraint: neutron.network}
+
+
+resources:
+  server1:
+    type: OS::Nova::Server
+    properties:
+      name: bi
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: server1_port }
+      metadata:
+        consul_ip: { get_param: consul_ip }
+
+  server1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: network }
+      security_groups: [{ get_resource: server_security_group }]
+
+  server1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net }
+      port_id: { get_resource: server1_port }
+
+  server_security_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: Add security group rules for server
+      name: security-group
+      rules:
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 80
+          port_range_max: 80
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: icmp
+
+outputs:
+  server1_private_ip:
+    description: IP address of server1 in private network
+    value: { get_attr: [ server1, first_address ] }
+  server1_public_ip:
+    description: Floating IP address of server1 in public network
+    value: { get_attr: [ server1_floating_ip, floating_ip_address ] }

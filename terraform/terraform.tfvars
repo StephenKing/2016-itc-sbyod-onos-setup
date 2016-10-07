@@ -1,0 +1,12 @@
+username = "admin"
+password = "admin"
+tenant_name = "admin"
+auth_url = "http://10.1.1.2:5000/v2.0"
+public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAyRKAea5teRt2KWvkIOnJZ2BPekTSKb0f5mzV87vEap6qcxtVdh1EyHLUhDzkzpgsWiLho6nXTh1iIJnr9D5GFg47Fl70KE9nnjdEuMC7y+RqTxxw1Npi9QuIpIuI/efoWgGEiMQVfooJ/gRDyDwDG/iGXMMlU8s2dDiZ5W/pMKC1ElJzHiws4sorJFcdjLyjPANoCn5YVmZzH9SQTI8Xmsar+opSf311JgDwLRtyuGR3MTFTj3g22MZNNHYj/2pqvYK5n/e9ZlCt2g/Db2jKrTwgjIjwRZfANeYjCY5IHhJsKjGWyLNc+Uuej5GAjDL3DLh0dZzQ1zyQ+ARDB1AYlw=="
+key_file_path = "~/.ssh/id_rsa_uni"
+
+region = "RegionOne"
+pub_net_id.RegionOne = "e50c7117-b4f0-4147-bacc-807e0d679a38"
+flavor.RegionOne = "2"
+image.RegionOne = "86f28c16-5b93-4139-ad10-dbfc5e2c10a9"
+user_login = "ubuntu"

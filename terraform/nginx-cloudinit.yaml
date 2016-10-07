@@ -1,0 +1,10 @@
+#cloud-config
+manage_etc_hosts: true
+
+packages:
+ - nginx
+ - unzip
+
+runcmd:
+ - [ wget, "https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip", -O, /tmp/consul.zip ]
+ - [ unzip, /tmp/consul.zip, -d, /usr/local/bin/ ]

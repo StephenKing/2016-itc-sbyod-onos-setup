@@ -1,0 +1,7 @@
+parameters:
+  key_name: sbyod-keypair
+  flavor: m1.tiny
+  image: nginx-template-snapshot
+  network: admin_internal_net
+  public_net: admin_floating_net
+  consul_ip: 192.168.111.67

@@ -1,0 +1,9 @@
+{
+  "services": [{
+    "id": "bi",
+    "name": "Business Intelligence",
+    "address": "TO_BE_REPLACED_IN_UPSTART_SCRIPT",
+    "port": 80,
+    "tags": ["search"]
+  }]
+}
